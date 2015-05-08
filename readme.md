@@ -57,13 +57,14 @@ Configuring Nagios should at this point not be too difficult. Edit your `command
 ```
 define command {
     command_name    host-wa
-    command_line    /path-to/py-nagios-wa/env/bin/python /path-to/py-nagios-wa/src/notify host
+    command_line    /path-to/py-nagios-wa/env/bin/python /path-to/py-nagios-wa/src/notify.py host
 }
 
 define command {
     command_name    service-wa
-    command_line    /path-to/py-nagios-wa/env/bin/python /path-to/py-nagios-wa/src/notify service
-}```
+    command_line    /path-to/py-nagios-wa/env/bin/python /path-to/py-nagios-wa/src/notify.py service
+}
+```
 
 Don't forget to command line paths, of course :-) That's it - you're all set to use WhatsApp for your Nagios
 notifications now!
