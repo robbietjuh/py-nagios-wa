@@ -68,6 +68,9 @@ define command {
 Don't forget to command line paths, of course :-) That's it - you're all set to use WhatsApp for your Nagios
 notifications now!
 
+### Screenshot
+![Screenshot](Screenshot_2015-05-09-00-06-37.png)
+
 ### License
 
 MIT
