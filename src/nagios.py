@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
+from yowsup.layers.protocol_messages.protocolentities import TextMessageProtocolEntity
 import local_settings as settings
 import os
 
@@ -11,6 +12,11 @@ class NagiosDefaultLayer(YowInterfaceLayer):
         print("Succesfully connected to the WhatsApp service.")
         print(self.generateNotificationText())
 
+        for recipient in settings.DEFAULT_RECIPIENTS:
+            print("Sending to " + recipient)
+            messageEntity = TextMessageProtocolEntity(self.generateNotificationText(), to=recipient)
+            self.toLower(messageEntity)
+
     def getEmojiForState(self, state):
         emojis = {
             'None': '❓',
@@ -18,10 +24,12 @@ class NagiosDefaultLayer(YowInterfaceLayer):
             'CRITICAL': '🚨',
             'WARNING': '',
             'OK': '✅'
-        }.get(state)
+        }
+
+        return emojis.get(state)
 
     def generateNotificationText(self):
-        return "This is a py-nagios-wa test message."
+        return " ".join((self.getEmojiForState('OK'), "This is a py-nagios-wa test message.",))
 
     def __str__(self):
         return "Nagios Layer"
