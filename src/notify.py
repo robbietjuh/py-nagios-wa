@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 from yowsup.layers.auth import YowAuthenticationProtocolLayer, AuthError
 from yowsup.layers.protocol_messages import YowMessagesProtocolLayer
 from yowsup.layers.network import YowNetworkLayer
@@ -8,8 +9,7 @@ from yowsup.layers import YowLayerEvent
 from yowsup.stacks import YowStack, YOWSUP_CORE_LAYERS
 from yowsup import env
 
-from nagios import NagiosLayer
-
+from nagios import NagiosDefaultLayer, NagiosServiceLayer, NagiosHostLayer
 
 if __name__ == "__main__":
     # Import local settings
@@ -19,8 +19,13 @@ if __name__ == "__main__":
         print("Error: Could not import local settings. Exiting!")
         exit(1)
 
-    # todo: Figure out which layer to use
-    nagios_layer = NagiosLayer
+    # Figure out which layer to use
+    nagios_layer = NagiosDefaultLayer
+
+    if 'service' in sys.argv:
+        nagios_layer = NagiosServiceLayer
+    elif 'host' in sys.argv:
+        nagios_layer = NagiosHostLayer
 
     # Set up handler layers and credentials
     layers = (
