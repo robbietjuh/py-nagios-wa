@@ -1,0 +1,2 @@
+class DefaultGenerator:
+    pass
