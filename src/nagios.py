@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import threading
 
 from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_messages.protocolentities import TextMessageProtocolEntity
@@ -7,15 +8,37 @@ import os
 
 
 class NagiosDefaultLayer(YowInterfaceLayer):
+    def __init__(self):
+        super(NagiosDefaultLayer, self).__init__()
+        self.queue = []
+        self.lock = threading.Condition()
+
     @ProtocolEntityCallback("success")
     def onSuccess(self, successProtocolEntity):
+        self.lock.acquire()
+
         print("Succesfully connected to the WhatsApp service.")
-        print(self.generateNotificationText())
 
         for recipient in settings.DEFAULT_RECIPIENTS:
             print("Sending to " + recipient)
             messageEntity = TextMessageProtocolEntity(self.generateNotificationText(), to=recipient)
+            self.queue.append(messageEntity.getId())
             self.toLower(messageEntity)
+
+        self.lock.release()
+
+    @ProtocolEntityCallback("ack")
+    def onAck(self, entity):
+        self.lock.acquire()
+
+        if entity.getId() in self.queue:
+            self.queue.remove(entity.getId())
+
+        if len(self.queue) == 0:
+            print("All messages have been sent. Disconnecting now!")
+            self.disconnect()
+
+        self.lock.release()
 
     def getEmojiForState(self, state):
         emojis = {

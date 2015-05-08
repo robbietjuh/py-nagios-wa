@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 from yowsup.layers.auth import YowAuthenticationProtocolLayer, AuthError
+from yowsup.layers.protocol_acks import YowAckProtocolLayer
 from yowsup.layers.protocol_messages import YowMessagesProtocolLayer
 from yowsup.layers.network import YowNetworkLayer
 from yowsup.layers.coder import YowCoderLayer
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     # Set up handler layers and credentials
     layers = (
                  nagios_layer,
-                 (YowAuthenticationProtocolLayer, YowMessagesProtocolLayer)
+                 (YowAuthenticationProtocolLayer, YowMessagesProtocolLayer, YowAckProtocolLayer)
              ) + YOWSUP_CORE_LAYERS
 
     credentials = (settings.CREDENTIALS['username'], settings.CREDENTIALS['password'])
@@ -47,5 +48,6 @@ if __name__ == "__main__":
 
     try:
         stack.loop()
+        exit(0)
     except AuthError as e:
         print("Authentication Error: %s" % e.message)
