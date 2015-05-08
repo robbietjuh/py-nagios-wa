@@ -9,7 +9,7 @@ class NagiosDefaultLayer(YowInterfaceLayer):
     @ProtocolEntityCallback("success")
     def onSuccess(self, successProtocolEntity):
         print("Succesfully connected to the WhatsApp service.")
-        print(self.generateMessage())
+        print(self.generateNotificationText())
 
     def getEmojiForState(self, state):
         emojis = {
@@ -20,7 +20,7 @@ class NagiosDefaultLayer(YowInterfaceLayer):
             'OK': '✅'
         }.get(state)
 
-    def generateMessage(self):
+    def generateNotificationText(self):
         return "This is a py-nagios-wa test message."
 
     def __str__(self):
@@ -28,7 +28,7 @@ class NagiosDefaultLayer(YowInterfaceLayer):
 
 
 class NagiosServiceLayer(NagiosDefaultLayer):
-    def generateMessage(self):
+    def generateNotificationText(self):
         notification = {
             'type': os.environ.get('NAGIOS_NOTIFICATIONTYPE'),
             'service': os.environ.get('NAGIOS_SERVICEDESC'),
@@ -44,7 +44,7 @@ class NagiosServiceLayer(NagiosDefaultLayer):
 
 
 class NagiosHostLayer(NagiosDefaultLayer):
-    def generateMessage(self):
+    def generateNotificationText(self):
         notification = {
             'type': os.environ.get('NAGIOS_NOTIFICATIONTYPE'),
             'host': os.environ.get('NAGIOS_HOSTALIAS'),
