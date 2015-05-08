@@ -1,0 +1,4 @@
+*.iml
+*.pyc
+src/local_settings.py
+env/
